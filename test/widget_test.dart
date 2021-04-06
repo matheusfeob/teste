@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:yandra_app/main.dart';
-import 'package:yandra_app/pages/app_page.dart';
+import 'package:yandra_app/pages/material/app_page.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

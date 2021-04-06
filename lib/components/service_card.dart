@@ -57,7 +57,7 @@ class ServiceCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(service.description),
+              child: Text(service.resume),
             ),
             Container(
               height: 15,

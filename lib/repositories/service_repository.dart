@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ServiceRepository {
   Future<List<Service>> getAll() async {
-    final response = await http.get(Uri.http('192.168.0.121:3000', 'services'));
+    final response = await http.get(Uri.http('34.70.158.58:3000', 'services'));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
