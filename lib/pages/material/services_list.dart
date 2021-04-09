@@ -1,14 +1,25 @@
+import 'package:yandra_app/components/centeredMessage.dart';
 import 'package:yandra_app/components/service_card.dart';
 import 'package:yandra_app/models/service.dart';
 import 'package:yandra_app/repositories/service_repository.dart';
 import 'package:flutter/material.dart';
 
-class ServicesList extends StatelessWidget {
+class ServicesList extends StatefulWidget {
+  @override
+  _ServicesListState createState() => _ServicesListState();
+}
+
+class _ServicesListState extends State<ServicesList> {
+  final String _title = 'Serviços';
+  final String _messageNoData = "Não foi encontrado nenhum serviço disponível";
+  final String _internalErro = "Erro interno.";
+  List<Service> _services;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Serviços'),
+        title: Text(_title),
         centerTitle: true,
         actions: [
           Padding(
@@ -20,26 +31,58 @@ class ServicesList extends StatelessWidget {
         ],
       ),
       drawer: Drawer(),
-      body: Center(
+      body: RefreshIndicator(
+        color: Theme.of(context).primaryColor,
+        onRefresh: () => _handleRefresh(),
         child: FutureBuilder<List<Service>>(
           future: ServiceRepository().getAll(),
+          initialData: [],
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return ServiceCard(
-                    service: snapshot.data[index],
+            _services = snapshot.data;
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                break;
+
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+                break;
+
+              case ConnectionState.active:
+                break;
+
+              case ConnectionState.done:
+                if (snapshot.hasData && _services.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: _services.length,
+                    itemBuilder: (context, index) {
+                      return ServiceCard(
+                        service: _services[index],
+                      );
+                    },
                   );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+                }
+
+                if (!snapshot.hasError && _services.isEmpty)
+                  return CenteredMessage(
+                    _messageNoData,
+                  );
+                break;
             }
-            return CircularProgressIndicator();
+
+            return CenteredMessage(
+              _internalErro,
+              icon: Icons.error_outline_sharp,
+            );
           },
         ),
       ),
     );
+  }
+
+  Future<List<Service>> _handleRefresh() async {
+    _services.clear();
+    setState(() async => _services = await ServiceRepository().getAll());
+
+    return _services;
   }
 }
