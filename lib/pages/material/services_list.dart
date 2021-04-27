@@ -11,8 +11,6 @@ class ServicesList extends StatefulWidget {
 
 class _ServicesListState extends State<ServicesList> {
   final String _title = 'Serviços';
-  final String _messageNoData = "Não foi encontrado nenhum serviço disponível";
-  final String _internalErro = "Erro interno.";
   List<Service> _services;
 
   @override
@@ -51,7 +49,7 @@ class _ServicesListState extends State<ServicesList> {
                 break;
 
               case ConnectionState.done:
-                if (snapshot.hasData && _services.isNotEmpty) {
+                if (snapshot.hasData && _services != null) {
                   return ListView.builder(
                     itemCount: _services.length,
                     itemBuilder: (context, index) {
@@ -62,15 +60,15 @@ class _ServicesListState extends State<ServicesList> {
                   );
                 }
 
-                if (!snapshot.hasError && _services.isEmpty)
+                if (!snapshot.hasError && _services == null)
                   return CenteredMessage(
-                    _messageNoData,
+                    snapshot.error.toString(),
                   );
                 break;
             }
 
             return CenteredMessage(
-              _internalErro,
+              snapshot.error.toString(),
               icon: Icons.error_outline_sharp,
             );
           },

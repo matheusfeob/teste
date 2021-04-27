@@ -1,19 +1,15 @@
-import 'dart:convert';
-
 import 'package:yandra_app/models/service.dart';
-import 'package:http/http.dart' as http;
+import 'package:yandra_app/repositories/api_handler.dart';
 
 class ServiceRepository {
-  Future<List<Service>> getAll() async {
-    final response = await http.get(Uri.http('34.70.158.58:3000', 'services'));
+  final ApiHelper _apiHelper = ApiHelper();
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as List;
-      List<Service> services =
-          json.map((obj) => Service.fromJson(obj)).toList();
-      return services;
-    } else {
-      throw Exception("Failed to load services");
-    }
+  Future<List<Service>> getAll() async {
+    final response = await _apiHelper.getAll('services') as List;
+
+    List<Service> services =
+        response.map((object) => Service.fromJson(object)).toList();
+
+    return services;
   }
 }

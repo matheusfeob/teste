@@ -29,10 +29,12 @@ class CenteredMessage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15),
-            child: Text(message,
-                style: TextStyle(
-                  fontSize: textSize,
-                )),
+            child: Text(
+              message,
+              style: TextStyle(
+                fontSize: textSize,
+              ),
+            ),
           ),
         ],
       ),
