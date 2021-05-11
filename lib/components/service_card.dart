@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ServiceCard extends StatefulWidget {
   final Service service;
-  const ServiceCard({Key key, this.service}) : super(key: key);
+  const ServiceCard({required this.service});
 
   @override
   _ServiceCardState createState() => _ServiceCardState();
@@ -81,7 +81,7 @@ class _ServiceCardState extends State<ServiceCard> {
                 Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: _checkbox,
-                  onChanged: (value) => _checkedService(value),
+                  onChanged: (value) => _checkedService(value!),
                 ),
                 Text(
                   widget.service.name,

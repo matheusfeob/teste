@@ -11,7 +11,7 @@ class ServicesList extends StatefulWidget {
 
 class _ServicesListState extends State<ServicesList> {
   final String _title = 'Serviços';
-  List<Service> _services;
+  List<Service> _services = [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +36,21 @@ class _ServicesListState extends State<ServicesList> {
           future: ServiceRepository().getAll(),
           initialData: [],
           builder: (context, snapshot) {
-            _services = snapshot.data;
+            if (snapshot.data != null)
+              _services = snapshot.data as List<Service>;
+
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 break;
 
               case ConnectionState.waiting:
                 return Center(child: CircularProgressIndicator());
-                break;
 
               case ConnectionState.active:
                 break;
 
               case ConnectionState.done:
-                if (snapshot.hasData && _services != null) {
+                if (snapshot.hasData && _services.length > 0) {
                   return ListView.builder(
                     itemCount: _services.length,
                     itemBuilder: (context, index) {
@@ -60,7 +61,7 @@ class _ServicesListState extends State<ServicesList> {
                   );
                 }
 
-                if (!snapshot.hasError && _services == null)
+                if (!snapshot.hasError && _services.length == 0)
                   return CenteredMessage(
                     snapshot.error.toString(),
                   );
